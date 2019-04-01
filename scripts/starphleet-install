@@ -21,7 +21,7 @@ echo "10240 65535" > /proc/sys/net/ipv4/ip_local_port_range
 # We declare EC2_DRIVES in case we can't find the overlay config
 declare -A EC2_DRIVES
 # Then try to get the defaults from the starphleet config
-[ -f ../overlay/etc/starphleet ] && source ../overlay/etc/starphleet
+[ -f overlay/etc/starphleet ] && source overlay/etc/starphleet
 
 # Dynamically build storage devices on EC2.
 #
