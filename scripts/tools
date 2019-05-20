@@ -6,28 +6,28 @@ die() { echo $1 ; exit ${2-1} ;}
 
 #Library of colorized logging functions, just source this
 function error() {
-  echo -e  '\E[31m'"$(date +"%x %X - ")\033[1m$*\033[0m"
+  echo -e  "[error] $(date +"%x %X - ")$*"
 }
 
 function announce() {
-  echo -e  '\E[34m'"$(date +"%x %X - ")\033[1m$*\033[0m"
+  echo -e  "[announce] $(date +"%x %X - ")$*"
 }
 
 function fatal() {
-  echo -e  '\E[31m'"$(date +"%x %X - ")\033[1m$*\033[0m"
+  echo -e  "[fatal] $(date +"%x %X - ")$*"
   exit 1
 }
 
 function trace() {
-  >&2 echo -e  '\E[35m'"$(date +"%x %X - ")\033[1m$*\033[0m"
+  >&2 echo -e  "[trace] $(date +"%x %X - ")$*"
 }
 
 function info() {
-  echo -e  '\E[32m'"$(date +"%x %X - ")\033[1m$*\033[0m"
+  echo -e  "[info] $(date +"%x %X - ")$*"
 }
 
 function warn() {
-  echo -e  '\E[33m'"$(date +"%x %X - ")\033[1m$*\033[0m"
+  echo -e  "[warn] $(date +"%x %X - ")$*"
 }
 
 function log() {
@@ -345,7 +345,7 @@ function get_updated_aws_command {
       # New pip install wanted libyaml so we'll install that before trying
       # to get the latest AWS cli
       apt-get update -y
-      apt-get install -y libyaml-dev python-dev python-docutils
+      apt-get install -y libyaml-dev python-dev python-docutils python-pip
       #######
       ## Because:  https://github.com/aws/aws-cli/issues/2999#issuecomment-356019306
       pip uninstall boto3 -y
@@ -373,6 +373,20 @@ function dev_mode() {
   else
     false
   fi
+}
+
+# Usage - fromJson "somejsonstring" "somekey"
+function fromJson() {
+    python -c \
+"import json
+import sys
+
+json_string, json_key = sys.argv[1:]
+try:
+    print json.loads(json_string)[json_key]
+except Exception:
+    print >> sys.stderr, \"This isn't json!\"" \
+    "${1}" "${2}"
 }
 
 # Provide a way for scripts to easily detect if this
